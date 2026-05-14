@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'net.serenity-bdd.serenity-gradle-plugin' version '3.9.8'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+dependencies {
+    testImplementation 'net.serenity-bdd:serenity-core:3.9.8'
+    testImplementation 'net.serenity-bdd:serenity-cucumber:3.9.8'
+    testImplementation 'net.serenity-bdd:serenity-screenplay:3.9.8'
+    testImplementation 'net.serenity-bdd:serenity-screenplay-webdriver:3.9.8'
+    testImplementation 'net.serenity-bdd:serenity-ensure:3.9.8'
+
+    testImplementation 'io.cucumber:cucumber-java:7.14.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.14.0'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
+    testImplementation 'com.opencsv:opencsv:5.8'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.9'
+}
+
+test {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = configurations.cucumberRuntime + sourceSets.test.output + sourceSets.main.output
+}
+
+serenity {
+    reports = ['single-page-html']
+}
