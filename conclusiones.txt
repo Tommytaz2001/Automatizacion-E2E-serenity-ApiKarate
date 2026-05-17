@@ -1,0 +1,82 @@
+CONCLUSIONES — Ejercicio de Automatización QA — NTT Data
+=========================================================
+
+EJERCICIO 1: E2E — SerenityBDD + Screenplay + Cucumber
+-------------------------------------------------------
+
+1. El patrón Screenplay ofrece una separación clara entre la intención de negocio
+   (Tasks como Login, AddProductsToCart) y los detalles técnicos de interacción
+   (Target locators en las clases *PageTargets). Esto hace el código significativamente
+   más legible y resiliente a cambios de UI que el patrón Page Object tradicional,
+   donde la lógica de negocio y los selectores suelen mezclarse.
+
+2. El uso de atributos data-test (ej. [data-test='checkout']) como estrategia de
+   localización demostró ser la más robusta para SauceDemo: estos atributos están
+   diseñados explícitamente para pruebas y son inmunes a refactorizaciones de estilos
+   CSS o renombramiento de clases.
+
+3. Serenity genera automáticamente reportes HTML detallados con capturas de pantalla
+   por cada paso de la interacción, proporcionando evidencia visual completa del flujo
+   de compra sin necesidad de configuración adicional en el código de pruebas.
+
+4. La integración de datos CSV con Cucumber se logró mediante la combinación de
+   Scenario Outline con tabla Examples (cuyo origen es users.csv) y la clase utilitaria
+   CsvDataReader (OpenCSV). Este enfoque cumple el requisito de parametrización desde
+   archivo externo sin dependencias de plugins adicionales para Cucumber.
+
+5. WebDriverManager eliminó la necesidad de gestionar versiones de ChromeDriver de
+   forma manual, simplificando la configuración del entorno en diferentes máquinas
+   y versiones de Chrome.
+
+6. Hallazgo: JDK 1.8 (Java 8) es incompatible con SerenityBDD 3.x y Karate 1.4.x.
+   La versión mínima soportada es JDK 11, que es la recomendada para este proyecto.
+
+
+EJERCICIO 2: API — Karate Framework
+------------------------------------
+
+1. Karate elimina la necesidad de código Java para pruebas REST. Los escenarios se
+   expresan directamente en Gherkin con DSL propio, reduciendo el tiempo de desarrollo
+   y mejorando la legibilidad para personas no técnicas en comparación con frameworks
+   como RestAssured que requieren código Java extenso.
+
+2. La carga nativa de archivos JSON con read('classpath:testdata/pet.json') permite
+   mantener los datos de prueba externalizados sin ningún código de serialización/
+   deserialización manual, cumpliendo directamente el requisito de "datos por JSON".
+
+3. El uso de karate.set()/karate.get() permitió compartir el ID del pet creado en
+   el escenario POST con los escenarios posteriores (GET, PUT, findByStatus), evitando
+   duplicación de llamadas y garantizando consistencia en las operaciones CRUD.
+
+4. Las aserciones de Karate como match response.id == '#number' son concisas y expresivas:
+   validan el tipo de dato y la presencia del campo simultáneamente en una sola línea,
+   reduciendo el código de validación comparado con otras herramientas.
+
+5. Los reportes de Karate incluyen el detalle completo de request y response HTTP por
+   cada paso de los escenarios, facilitando enormemente el diagnóstico de fallos en
+   integraciones con servicios externos.
+
+6. Hallazgo: La API pública petstore.swagger.io es compartida por múltiples usuarios
+   simultáneamente, lo que puede generar interferencia en consultas por estado (ej.
+   findByStatus=sold). Para mayor estabilidad, se recomienda usar un entorno propio
+   o validar por ID en lugar de por estado global.
+
+
+CONSIDERACIONES GENERALES
+--------------------------
+
+1. La arquitectura multi-módulo Gradle permite mantener las dependencias de E2E y API
+   completamente aisladas, evitando conflictos de versiones entre SerenityBDD y Karate
+   (ambos tienen dependencias sobre Gson y otras librerías en versiones diferentes).
+
+2. El patrón Screenplay demostró ser especialmente valioso para el flujo de SauceDemo,
+   ya que el flujo de compra tiene pasos claramente diferenciados (Login, AddProducts,
+   FillForm, Confirm) que se mapean naturalmente a Tasks reutilizables.
+
+3. La separación de localizadores en clases *PageTargets siguiendo el principio de
+   responsabilidad única facilita el mantenimiento: un cambio en el selector de un
+   elemento solo requiere actualización en un único lugar del código.
+
+4. Para entornos CI/CD, se recomienda añadir el flag --headless en chrome.switches de
+   serenity.properties y configurar un nodo de Chrome en el pipeline (ej. GitHub Actions
+   con ubuntu-latest que incluye Chrome por defecto).
