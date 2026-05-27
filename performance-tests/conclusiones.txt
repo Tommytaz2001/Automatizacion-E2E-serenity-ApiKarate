@@ -1,0 +1,18 @@
+CONCLUSIONES - Ejercicio Performance k6 - NTT Data
+==================================================
+
+1. Se implemento la prueba de carga del servicio de login con k6 usando el executor constant-arrival-rate, ya que permite controlar directamente la tasa de llegada y validar el objetivo minimo de 20 TPS solicitado.
+
+2. Los datos de autenticacion se externalizaron en data/users.csv con las columnas user y passwd indicadas en el enunciado. El script recorre estos datos durante la ejecucion para evitar dejar credenciales fijas dentro del codigo.
+
+3. La prueba valida tres condiciones principales: respuesta HTTP 200, retorno de token y tiempo de respuesta menor o igual a 1500 ms por peticion. Ademas, los thresholds controlan p95 menor a 1500 ms, errores menores al 3% y checks superiores al 97%.
+
+4. En la ejecucion visualizada en Grafana Cloud se obtuvo un pico de 21.33 peticiones por segundo y una tasa promedio cercana a 20 peticiones por segundo, cumpliendo el minimo requerido de 20 TPS.
+
+5. La prueba registro 0 fallos HTTP, por debajo del limite aceptable de 3%. No se observaron peticiones fallidas durante la ejecucion final en Grafana Cloud.
+
+6. El tiempo promedio observado en la tabla HTTP fue 256 ms, el p95 fue 268 ms, el p99 fue 352 ms y el maximo fue 692 ms. Estos valores cumplen con el limite de 1.5 segundos definido para la prueba.
+
+7. La ejecucion en Grafana Cloud registro 6.3K solicitudes y se ejecuto con limite de 100 VUs en la zona de carga Columbus.
+
+8. Se recomienda repetir la prueba durante una ventana mas larga, por ejemplo 5 o 10 minutos, para confirmar estabilidad sostenida y generar una linea base mas representativa.

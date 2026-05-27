@@ -19,3 +19,9 @@ Thumbs.db
 
 # Chrome test profile (generated during test runs)
 e2e-tests/target/chrome-test-profile/
+
+# k6 portable binaries and downloaded archives
+performance-tests/tools/
+performance-tests/**/*.exe
+performance-tests/**/*.zip
+performance-tests/reports/k6-vus-http-reqs.png

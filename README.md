@@ -347,3 +347,23 @@ Karate lo carga con `read('classpath:testdata/pet.json')`.
 | `gradlew.bat` falla con JDK 21+ | Usar `.\mvnw.cmd` en su lugar |
 | `PetStore API: 504 / timeout` | La API pública puede ser lenta; volver a ejecutar |
 | `No scenarios found` | Verificar que el `glue` en `CucumberTestRunner` sea `com.nttdata.qa.stepdefinitions` |
+
+---
+
+## Ejercicio Performance - k6
+
+Se agrego el modulo `performance-tests` para la prueba de carga del servicio de login.
+
+```cmd
+cd performance-tests
+k6 run scripts/login.load.test.js
+```
+
+La evidencia de la ejecucion queda en:
+
+```text
+performance-tests\reports\textSummary.txt
+performance-tests\reports\summary.json
+performance-tests\reports\k6-timeseries.json
+performance-tests\docs\InformeResultados.docx
+```

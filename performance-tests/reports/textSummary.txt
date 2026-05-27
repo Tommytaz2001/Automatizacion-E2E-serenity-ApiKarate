@@ -1,0 +1,16 @@
+Resultado prueba de carga login
+
+http_reqs...............: 1261 20.89/s
+http_req_failed.........: 0.00%
+checks..................: 100.00%
+http_req_duration avg...: 342.49ms
+http_req_duration med...: 335.17ms
+http_req_duration p90...: 359.43ms
+http_req_duration p95...: 376.80ms
+http_req_duration max...: 763.24ms
+
+Validaciones esperadas
+TPS minimo..............: 21
+Tiempo respuesta p95....: < 1500ms
+Tasa error..............: < 3%
+Checks..................: > 97%
